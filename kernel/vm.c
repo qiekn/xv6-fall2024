@@ -489,16 +489,17 @@ copyinstr(pagetable_t pagetable, char *dst, uint64 srcva, uint64 max)
 
 #ifdef LAB_PGTBL
 void
-vmprint_dfs(pagetable_t pagetable, int depth, void* parent_va) {
+vmprint_dfs(pagetable_t pagetable, int depth, uint64 parent_va) {
   for (int i = 0; i < 512; i++) {
     pte_t pte = pagetable[i];
     if (pte & PTE_V) {
       for (int j = 0; j <= depth; j++) {
-        printf(" ..");  // print prefix
+        printf(" ..");
       }
-      void *va = parent_va + (i << ((2 - depth) * 9 + 12));
+      
+      uint64 va = parent_va + (i << PXSHIFT(2 - depth));
       pte_t pa = PTE2PA(pte);
-      printf("%p: pte %p pa %p\n", va, (void *)pte, (void *)pa);
+      printf("%p: pte %p pa %p\n", (void *)va, (void *)pte, (void *)pa);
 
       if (!PTE_LEAF(pte)) {
         vmprint_dfs((pagetable_t)pa, depth + 1, va);
