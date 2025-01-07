@@ -359,23 +359,26 @@ typedef uint64 *pagetable_t; // 512 PTEs
 
 #endif // __ASSEMBLER__
 
+// ordinary page
 #define PGSIZE 4096 // bytes per page
 #define PGSHIFT 12  // bits of offset within a page
-
-#ifdef LAB_PGTBL
-#define SUPERPGSIZE (2 * (1 << 20)) // bytes per page
-#define SUPERPGROUNDUP(sz)  (((sz)+SUPERPGSIZE-1) & ~(SUPERPGSIZE-1))
-#endif
-
 #define PGROUNDUP(sz)  (((sz)+PGSIZE-1) & ~(PGSIZE-1))
 #define PGROUNDDOWN(a) (((a)) & ~(PGSIZE-1))
+// super page
+#ifdef LAB_PGTBL
+#define SPGSIZE (2 * (1 << 20))  // bytes per super page
+#define SPGCOUNT 16              // number of super page
+#define SPGSHIFT 21              // bytes of offset within a super page
+#define SUPERPGROUNDUP(sz) (((sz) + SPGSIZE - 1) & ~(SPGSIZE - 1))
+#endif
+
 
 #define PTE_V (1L << 0) // valid
 #define PTE_R (1L << 1)
 #define PTE_W (1L << 2)
 #define PTE_X (1L << 3)
 #define PTE_U (1L << 4) // user can access
-
+#define PTE_SPG (1L << 8)  // superpage
 
 
 #if defined(LAB_MMAP) || defined(LAB_PGTBL)
