@@ -1,0 +1,19 @@
+Q: Which other xv6 system call(s) could be made faster using this shared
+   page? Explain how.
+A: Any system call using invokes copyin or copyout. Because of reducing 
+   the overhead of copying data between user and kernel spaces.
+
+
+Q: For every page table entry in the print_pgtbl output, explain what it
+   logically contains and what its permission bits are. 
+
+A: Xv6 runs on Sv39 RISC-V, which means that only the bottom 39 bits 
+   of a 64-bit virtual address are used; the top 25 bits are not used. 
+   In this Sv39 configuration, a RISC-V page table is logically an array 
+   of 227 (134,217,728) page table entries (PTEs). Each PTE contains a 
+   44-bit physical page number (PPN) and some flags. The paging hardware 
+   translates a virtual address by using the top 27 bits of the 39 bits 
+   to index into the page table to find a PTE, and making a 56-bit 
+   physical address whose top 44 bits come from the PPN in the PTE and 
+   whose bottom 12 bits are copied from the original virtual address.
+
